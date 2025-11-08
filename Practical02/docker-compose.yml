@@ -1,0 +1,27 @@
+# docker-compose.yml
+# CM3010 – Practical 2: TCM Clinic Database
+
+version: "3.8"
+
+services:
+  mysql-db:
+    image: mysql:8.0
+    container_name: cm3010-p02-mysql
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "3308:3306"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: cm3010-p02-phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: mysql-db
+      PMA_USER: ${MYSQL_USER}
+      PMA_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "8081:80"
